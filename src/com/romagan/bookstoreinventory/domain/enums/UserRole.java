@@ -1,19 +1,23 @@
 package com.romagan.bookstoreinventory.domain.enums;
 
 public enum UserRole {
-    USER("користувач"),
-    CASHIER("касир"),
-    WAREHOUSEMANAGER("главскладу"),
-    ADMIN("адміністратор");
+    USER("Користувач"),
+    CASHIER("Касир"),
+    WAREHOUSE_MANAGER("Завідувач складу"), // Виправлено назву та опис
+    ADMIN("Адміністратор");
 
+    private final String displayValue; // Змінено Object на String
 
-    private final Object name;
-
-    UserRole(String name) {
-        this.name = name;
+    UserRole(String displayValue) {
+        this.displayValue = displayValue;
     }
 
-    public Object getName() {
-        return name;
+    public String getDisplayValue() {
+        return displayValue;
+    }
+
+    @Override
+    public String toString() {
+        return displayValue;
     }
 }
