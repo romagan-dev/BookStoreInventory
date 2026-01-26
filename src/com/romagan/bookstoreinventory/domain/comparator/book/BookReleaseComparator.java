@@ -1,6 +1,6 @@
 package com.romagan.bookstoreinventory.domain.comparator.book;
 
-import com.romagan.bookstoreinventory.domain.Book;
+import com.romagan.bookstoreinventory.model.Book;
 import java.util.Comparator;
 
 /**

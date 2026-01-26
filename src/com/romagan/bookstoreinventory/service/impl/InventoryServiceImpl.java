@@ -1,7 +1,7 @@
-package com.romagan.bookstoreinventory.domain.impl;
+package com.romagan.bookstoreinventory.service.impl;
 
-import com.romagan.bookstoreinventory.domain.Book;
 import com.romagan.bookstoreinventory.domain.exception.EntityValidationException;
+import com.romagan.bookstoreinventory.model.Book;
 
 /**
  * Реалізація сервісу управління складськими запасами.

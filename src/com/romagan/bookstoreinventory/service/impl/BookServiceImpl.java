@@ -1,9 +1,9 @@
-package com.romagan.bookstoreinventory.domain.impl;
+package com.romagan.bookstoreinventory.service.impl;
 
-import com.romagan.bookstoreinventory.domain.Book;
 import com.romagan.bookstoreinventory.domain.comparator.book.BookPriceComparator;
 import com.romagan.bookstoreinventory.domain.exception.EntityValidationException;
 import com.romagan.bookstoreinventory.domain.repository.Repository;
+import com.romagan.bookstoreinventory.model.Book;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

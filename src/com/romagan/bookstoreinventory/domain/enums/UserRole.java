@@ -2,6 +2,7 @@ package com.romagan.bookstoreinventory.domain.enums;
 
 public enum UserRole {
     USER("Користувач"),
+    CUSTOMER("Покупець"),
     CASHIER("Касир"),
     WAREHOUSE_MANAGER("Завідувач складу"), // Виправлено назву та опис
     ADMIN("Адміністратор");

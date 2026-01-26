@@ -1,4 +1,8 @@
-package com.romagan.bookstoreinventory.domain;
+package com.romagan.bookstoreinventory.model;
+
+// ПРАВИЛЬНИЙ ІМПОРТ: тепер він веде в model, а не в domain
+
+import com.romagan.bookstoreinventory.domain.BaseEntity;
 
 /**
  * Сутність, що представляє книгу в системі обліку.
@@ -7,18 +11,17 @@ public class Book extends BaseEntity {
 
     private String title;
     private Author author;
+    // Якщо Category та Publisher теж у model — змінити імпорти або видалити ці поля, якщо вони не використовуються
     private Category category;
     private Publisher publisher;
     private double price;
     private int quantity;
     private int releaseYear;
 
-    // Конструктор за замовчуванням
     public Book() {
         super();
     }
 
-    // Конструктор з основними полями
     public Book(String title, Author author, double price, int quantity, int releaseYear) {
         this();
         this.title = title;
@@ -28,7 +31,7 @@ public class Book extends BaseEntity {
         this.releaseYear = releaseYear;
     }
 
-    // Геттери та сеттери
+    // Геттери та сеттери (залишаються без змін)
     public String getTitle() {
         return title;
     }
@@ -43,22 +46,6 @@ public class Book extends BaseEntity {
 
     public void setAuthor(Author author) {
         this.author = author;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Publisher getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(Publisher publisher) {
-        this.publisher = publisher;
     }
 
     public double getPrice() {
@@ -87,8 +74,11 @@ public class Book extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Книга: '" + title + "' | Автор: " + (author != null ? author.getLastName() : "н/д")
-              +
-              " | Ціна: " + price + " | На складі: " + quantity;
+        return String.format(
+              "ID: [%s] | Назва: %-20s | Автор: %-15s | Ціна: %7.2f | К-сть: %d",
+              getId(), getTitle(),
+              (getAuthor() != null ? getAuthor().getLastName() : "Невідомий"),
+              getPrice(), getQuantity()
+        );
     }
 }

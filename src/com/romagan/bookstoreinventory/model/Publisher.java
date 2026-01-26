@@ -1,4 +1,6 @@
-package com.romagan.bookstoreinventory.domain;
+package com.romagan.bookstoreinventory.model;
+
+import com.romagan.bookstoreinventory.domain.BaseEntity;
 
 /**
  * Сутність, що представляє видавництво книг.

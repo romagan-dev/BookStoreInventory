@@ -1,8 +1,8 @@
-package com.romagan.bookstoreinventory.domain.impl;
+package com.romagan.bookstoreinventory.service.impl;
 
-import com.romagan.bookstoreinventory.domain.User;
 import com.romagan.bookstoreinventory.domain.comparator.user.UserEmailComparator;
 import com.romagan.bookstoreinventory.domain.comparator.user.UserFullNameComparator;
+import com.romagan.bookstoreinventory.model.User;
 import java.util.ArrayList;
 import java.util.List;
 

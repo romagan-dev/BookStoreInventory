@@ -1,5 +1,6 @@
-package com.romagan.bookstoreinventory.domain;
+package com.romagan.bookstoreinventory.model;
 
+import com.romagan.bookstoreinventory.domain.BaseEntity;
 import com.romagan.bookstoreinventory.domain.enums.UserRole;
 
 /**

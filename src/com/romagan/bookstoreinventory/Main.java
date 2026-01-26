@@ -1,55 +1,46 @@
 package com.romagan.bookstoreinventory;
 
-import com.romagan.bookstoreinventory.domain.Author;
-import com.romagan.bookstoreinventory.domain.Book;
-import com.romagan.bookstoreinventory.domain.impl.BookServiceImpl;
 import com.romagan.bookstoreinventory.domain.repository.UnitOfWork;
-import java.util.Scanner;
+import com.romagan.bookstoreinventory.service.EmailService;
+import com.romagan.bookstoreinventory.service.impl.AuthServiceImpl;
+import com.romagan.bookstoreinventory.service.impl.BookServiceImpl;
+import com.romagan.bookstoreinventory.service.impl.EmailServiceImpl;
+import com.romagan.bookstoreinventory.ui.pages.AdminPage;
+import com.romagan.bookstoreinventory.ui.pages.AuthPage;
+import com.romagan.bookstoreinventory.ui.pages.CustomerPage;
 
 public class Main {
 
     static void main(String[] args) {
+        // Завантаження бази даних
         UnitOfWork uow = new UnitOfWork();
-        uow.load(); // 1. ПЕРШИМ ДІЛОМ ЗАВАНТАЖУЄМО СТАРИЙ СКЛАД
+        uow.load();
 
+        // 1. Створюємо сервіси
+        EmailService emailService = new EmailServiceImpl();
+        AuthServiceImpl authService = new AuthServiceImpl(uow.getUserRepository(), emailService);
         BookServiceImpl bookService = new BookServiceImpl(uow.getBookRepository());
-        Scanner scanner = new Scanner(System.in);
-        boolean running = true;
 
-        while (running) {
-            System.out.println("\n--- СИСТЕМА УПРАВЛІННЯ СКЛАДОМ ---");
-            System.out.println("1. Додати новий товар на склад");
-            System.out.println("2. Показати весь інвентар");
-            System.out.println("3. Пошук товару");
-            System.out.println("4. Видалити товар (списання)");
-            System.out.println("5. Зберегти стан складу (Commit)");
-            System.out.println("0. Вихід");
+        // 2. Створюємо сторінки з УСІМА необхідними залежностями
+        // Для AdminPage тепер потрібні репозиторії авторів та категорій
+        AdminPage adminPage = new AdminPage(
+              bookService,
+              uow.getAuthorRepository(),   // Переконайся, що цей метод є в uow
+              uow.getCategoryRepository(), // Переконайся, що цей метод є в uow
+              uow
+        );
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+        // Для CustomerPage тепер потрібні authService та orderRepository
+        CustomerPage customerPage = new CustomerPage(
+              bookService,
+              authService,
+              uow.getOrderRepository(),    // Переконайся, що цей метод є в uow
+              uow
+        );
 
-            switch (choice) {
-                case 1: // РУЧНЕ ДОДАВАННЯ ТОВАРУ
-                    System.out.print("Назва: ");
-                    String title = scanner.nextLine();
-                    System.out.print("Автор: ");
-                    String auth = scanner.nextLine();
-                    System.out.print("Ціна: ");
-                    double price = scanner.nextDouble();
-                    System.out.print("Кількість: ");
-                    int qty = scanner.nextInt();
-                    bookService.create(new Book(title, new Author(auth, ""), price, qty, 2024));
-                    break;
-                case 2:
-                    bookService.findAll().forEach(System.out::println);
-                    break;
-                case 5:
-                    uow.commit(); // ТЕПЕР ЦЕ ПИШЕ У ФАЙЛ, ЯКИЙ МИ ЗЧИТАЄМО НАСТУПНОГО РАЗУ
-                    break;
-                case 0:
-                    running = false;
-                    break;
-            }
-        }
+        // 3. Головна сторінка авторизації
+        AuthPage authPage = new AuthPage(authService, uow, adminPage, customerPage);
+
+        authPage.display();
     }
 }

@@ -1,6 +1,6 @@
 package com.romagan.bookstoreinventory.domain.comparator.user;
 
-import com.romagan.bookstoreinventory.domain.User;
+import com.romagan.bookstoreinventory.model.User;
 import java.util.Comparator;
 
 /**
