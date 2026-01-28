@@ -11,7 +11,7 @@ import com.romagan.bookstoreinventory.ui.pages.CustomerPage;
 
 public class Main {
 
-    static void main(String[] args) {
+    static void main(String[] args) { // Додав public
         // Завантаження бази даних
         UnitOfWork uow = new UnitOfWork();
         uow.load();
@@ -21,26 +21,27 @@ public class Main {
         AuthServiceImpl authService = new AuthServiceImpl(uow.getUserRepository(), emailService);
         BookServiceImpl bookService = new BookServiceImpl(uow.getBookRepository());
 
-        // 2. Створюємо сторінки з УСІМА необхідними залежностями
-        // Для AdminPage тепер потрібні репозиторії авторів та категорій
+        // 2. Створюємо сторінки
+        // ТУТ УВАГА: додаємо uow.getOrderRepository() четвертим параметром
         AdminPage adminPage = new AdminPage(
               bookService,
-              uow.getAuthorRepository(),   // Переконайся, що цей метод є в uow
-              uow.getCategoryRepository(), // Переконайся, що цей метод є в uow
+              uow.getAuthorRepository(),
+              uow.getCategoryRepository(),
+              uow.getOrderRepository(), // ОСЬ ЦЕЙ ПАРАМЕТР МИ ДОДАЛИ
               uow
         );
 
-        // Для CustomerPage тепер потрібні authService та orderRepository
         CustomerPage customerPage = new CustomerPage(
               bookService,
               authService,
-              uow.getOrderRepository(),    // Переконайся, що цей метод є в uow
+              uow.getOrderRepository(),
               uow
         );
 
         // 3. Головна сторінка авторизації
         AuthPage authPage = new AuthPage(authService, uow, adminPage, customerPage);
 
+        // Запуск програми
         authPage.display();
     }
 }

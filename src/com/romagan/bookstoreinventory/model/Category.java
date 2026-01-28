@@ -2,26 +2,25 @@ package com.romagan.bookstoreinventory.model;
 
 import com.romagan.bookstoreinventory.domain.BaseEntity;
 
-/**
- * Сутність, що представляє категорію (жанр) книг.
- */
 public class Category extends BaseEntity {
 
     private String name;
     private String description;
 
+    // Порожній конструктор для JSON (Jackson/Gson)
     public Category() {
         super();
     }
 
     public Category(String name) {
         this();
-        this.name = name;
+        // Захист: якщо передали null, запишемо "Без назви"
+        this.name = (name != null) ? name : "Без назви";
     }
 
-    // Геттери та сеттери
     public String getName() {
-        return name;
+        // Додатковий захист при отриманні
+        return name != null ? name : "Без назви";
     }
 
     public void setName(String name) {
@@ -38,6 +37,6 @@ public class Category extends BaseEntity {
 
     @Override
     public String toString() {
-        return name;
+        return getName(); // Використовуємо геттер із захистом
     }
 }

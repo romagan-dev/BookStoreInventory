@@ -34,11 +34,15 @@ public class AuthServiceImpl {
             throw new EntityValidationException(ValidationError.EMAIL_ALREADY_EXISTS.getMessage());
         }
 
+        // Генеруємо 4-значний код
         this.lastGeneratedCode = String.valueOf((int) ((Math.random() * 9000) + 1000));
         this.codeCreatedAt = System.currentTimeMillis();
         this.pendingUser = user;
+
+        // Хешуємо пароль перед тимчасовим збереженням
         this.pendingUser.setPassword(PasswordHasher.hash(password));
 
+        // Відправляємо код (Debug вивід буде в консолі всередині сервісу)
         emailService.sendVerificationCode(user.getEmail(), lastGeneratedCode);
     }
 
@@ -48,12 +52,14 @@ public class AuthServiceImpl {
                   ValidationError.REGISTRATION_SESSION_NOT_FOUND.getMessage());
         }
 
+        // Перевірка терміну дії (5 хвилин)
         if (System.currentTimeMillis() - codeCreatedAt > 300000) {
             pendingUser = null;
             throw new EntityValidationException(ValidationError.OTP_CODE_EXPIRED.getMessage());
         }
 
-        if (!lastGeneratedCode.equals(inputCode)) {
+        // ПІДТРИМКА DEBUG MODE: пускаємо, якщо введено реальний код АБО 0000
+        if (!lastGeneratedCode.equals(inputCode) && !inputCode.equals("0000")) {
             throw new EntityValidationException(ValidationError.INVALID_OTP_CODE.getMessage());
         }
 
@@ -61,17 +67,18 @@ public class AuthServiceImpl {
         emailService.sendWelcomeEmail(pendingUser.getEmail());
 
         pendingUser = null;
-        System.out.println("\u001B[32mРеєстрація успішна!\u001B[0m");
+        lastGeneratedCode = null;
     }
 
     public User login(String email, String password) {
-        String hashedInput = PasswordHasher.hash(password);
         User user = userRepository.findAll().stream()
-              .filter(u -> u.getEmail().equalsIgnoreCase(email) && u.getPassword()
-                    .equals(hashedInput))
+              .filter(u -> u.getEmail().equalsIgnoreCase(email))
               .findFirst()
-              .orElseThrow(() -> new EntityValidationException(
-                    "Невірний email або пароль!")); // Тут можна додати LOGIN_FAILED в Enum
+              .orElseThrow(() -> new EntityValidationException("Невірний email або пароль!"));
+
+        if (!PasswordHasher.check(password, user.getPassword())) {
+            throw new EntityValidationException("Невірний email або пароль!");
+        }
 
         this.currentUser = user;
         return user;

@@ -15,6 +15,7 @@ public class User extends BaseEntity implements Comparable<User> {
     private String avatarPath;
     private UserRole role;
 
+
     public User() {
         super();
     }

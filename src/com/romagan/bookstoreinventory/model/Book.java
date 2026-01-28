@@ -29,6 +29,7 @@ public class Book extends BaseEntity {
         this.price = price;
         this.quantity = quantity;
         this.releaseYear = releaseYear;
+        this.category = new Category();
     }
 
     // Геттери та сеттери (залишаються без змін)
@@ -72,13 +73,22 @@ public class Book extends BaseEntity {
         this.releaseYear = releaseYear;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return String.format(
-              "ID: [%s] | Назва: %-20s | Автор: %-15s | Ціна: %7.2f | К-сть: %d",
-              getId(), getTitle(),
-              (getAuthor() != null ? getAuthor().getLastName() : "Невідомий"),
-              getPrice(), getQuantity()
+              "«%-20s» | Автор: %-15s | Рік: %d | Ціна: %7.2f грн | (В наявності: %d)",
+              title,
+              (author != null ? author.getLastName() : "Невідомий"),
+              releaseYear, price, quantity
         );
     }
 }
